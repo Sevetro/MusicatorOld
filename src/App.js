@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import './App.css'
-import Metronome2 from './components/Metronome2'
-// import Metronome from './components/Metronome'
-
+import Metronome from './components/Metronome'
 
 
 export default class App extends Component {
@@ -12,6 +10,7 @@ export default class App extends Component {
       bpmNumber: 200,
       isActive: false
     }
+
   }
 
 
@@ -19,16 +18,17 @@ export default class App extends Component {
     this.setState({ bpmNumber: newBpm, isActive: this.state.isActive })
   }
 
-  changeActive = () => {
-    this.setState({ bpmNumber: this.state.bpmNumber, isActive: !this.state.isActive})
+
+  changeActive = (toggleMetronome) => {
+    this.setState({ bpmNumber: this.state.bpmNumber, isActive: !this.state.isActive }, toggleMetronome)
   }
+
 
   render() {
     return (
       <div className="App">
 
-        {/* <Metronome metronomeState={{ bpmNumber: 200, active: false }} /> */}
-        <Metronome2
+        <Metronome
           bpmNumber={this.state.bpmNumber}
           isActive={this.state.isActive}
           changeBpmNumber={this.changeBpmNumber}
