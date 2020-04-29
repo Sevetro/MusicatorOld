@@ -4,27 +4,27 @@ import Metronome from './components/Metronome'
 
 
 export default class App extends Component {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super()
     this.state = {
-      bpmNumber: 200,
+      bpmNumber: 100,
       isActive: false
     }
 
   }
 
-
-  changeBpmNumber = (newBpm) => {
-    this.setState({ bpmNumber: newBpm, isActive: this.state.isActive })
-  }
-
-
-  changeActive = (toggleMetronome) => {
-    this.setState({ bpmNumber: this.state.bpmNumber, isActive: !this.state.isActive }, toggleMetronome)
+  //czy metody powinny być tu
+  changeBpmNumber = (btnValue, toggleMetronome) => {
+    this.setState(prevState => { return { bpmNumber: prevState.bpmNumber + btnValue, isActive: prevState.isActive } }, toggleMetronome)
   }
 
 
   render() {
+    //czy tutaj
+    const changeActive = (toggleMetronome) => {
+      this.setState(prevState => { return { bpmNumber: prevState.bpmNumber, isActive: !prevState.isActive } }, toggleMetronome)
+    }
+
     return (
       <div className="App">
 
@@ -32,7 +32,7 @@ export default class App extends Component {
           bpmNumber={this.state.bpmNumber}
           isActive={this.state.isActive}
           changeBpmNumber={this.changeBpmNumber}
-          changeActive={this.changeActive}
+          changeActive={changeActive}
         />
       </div>
     )
