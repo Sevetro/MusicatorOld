@@ -8,7 +8,7 @@ export default class Metronome extends Component {
     toggleMetronome = () => {
         clearInterval(this.metronomeId)
         if (this.props.isActive) {
-            this.metronomeId = setInterval(this.props.flashMetronomeLed, (this.secPerMin / (this.props.bpmNumber)) * this.milSecPerSec)
+            this.metronomeId = setInterval(this.props.hitTheNote, (this.secPerMin / (this.props.bpmNumber)) * this.milSecPerSec)
         }
     }
 

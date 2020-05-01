@@ -7,11 +7,11 @@ export default class App extends Component {
   constructor() {
     super()
     this.state = {
-      bpmNumber: 5060,
+      bpmNumber: 300,
       isActive: false,
       metronomeLedColor: "white",
       activeTileId: -1,
-      tilesCount: 126
+      tilesCount: 48
     }
   }
 
@@ -20,11 +20,15 @@ export default class App extends Component {
     this.setState(prevState => ({ bpmNumber: prevState.bpmNumber + btnValue, isActive: newActive }), toggleMetronome)
   }
 
+  hitTheNote = () => {
+    this.changeCurrentDrumTile()
+    this.flashMetronomeLed()
+  }
+
   flashMetronomeLed = () => {
     this.setState({ metronomeLedColor: "blue" }, () => setTimeout(() => {
       this.setState({ metronomeLedColor: "white" })
     }, 50))
-    this.changeCurrentDrumTile()
   }
 
 
@@ -33,7 +37,7 @@ export default class App extends Component {
   }
 
   addTile = () => {
-    this.setState(prevState => ({ tilesCount: prevState.tilesCount + 1 }))
+    this.state.tilesCount < 48 && this.setState(prevState => ({ tilesCount: prevState.tilesCount + 1 }))
   }
 
   removeTile = () => {
@@ -52,7 +56,7 @@ export default class App extends Component {
           isActive={isActive}
           metronomeLedColor={metronomeLedColor}
           changeMetronomeState={this.changeMetronomeState}
-          flashMetronomeLed={this.flashMetronomeLed}
+          hitTheNote={this.hitTheNote}
         />
 
         <DrumLoop
