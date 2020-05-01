@@ -1,16 +1,18 @@
 import React from 'react'
+import DrumTile from "./DrumTile";
 
-export default function DrumLoop(props) {
+export default function DrumLoop({tilesCount, addTile, removeTile, activeTileId}) {
+    const renderTiles = React.useMemo(() => new Array(tilesCount).fill(tilesCount).map((tile, index) => <DrumTile
+            isActive={index === activeTileId} id={index} key={index}/>)
+        , [tilesCount, activeTileId]);
+
     return (
-        <div className="DrumLoop" >
-
+        <div className="DrumLoop">
             <div>
-                <button onClick={props.removeTile}>-</button>
-                <button onClick={props.addTile}>+</button>
+                <button onClick={removeTile}>-</button>
+                <button onClick={addTile}>+</button>
             </div>
-
-            <div>{props.drumTileArray}</div>
-
+            <div>{renderTiles}</div>
         </div>
-    )
+    );
 }
