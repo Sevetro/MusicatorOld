@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import './App.css'
 import Metronome from './components/Metronome'
 import DrumLoop from './components/DrumLoop'
-
+import DrumTile from './components/DrumTile'
 
 export default class App extends Component {
   constructor() {
@@ -11,18 +11,32 @@ export default class App extends Component {
       bpmNumber: 60,
       isActive: false,
       metronomeLedColor: "white",
-      nextDrumTileId: 1
+      nextDrumTileId: -1,
+      drumTileArray: [],
+      initDrumTileCount: 4
     }
   }
 
 
+  componentDidMount() {
+    this.createDrumTileArray(this.state.initDrumTileCount)
+  }
+
+
+  createDrumTileArray = (tileCount) => {
+    let newDrumTileArray = []
+    for (let i = 0; i < tileCount; i++) {
+      newDrumTileArray.push(this.renderTile(i))
+    }
+    this.setState({ drumTileArray: newDrumTileArray })
+  }
+
+
+  renderTile = (id) => (<DrumTile id={id} key={id} isActive={id === this.state.nextDrumTileId} />)
+
+
   changeMetronomeState = (btnValue, newActive, toggleMetronome) => {
-    this.setState(prevState => {
-      return {
-        bpmNumber: prevState.bpmNumber + btnValue,
-        isActive: newActive
-      }
-    }, toggleMetronome)
+    this.setState(prevState => ({ bpmNumber: prevState.bpmNumber + btnValue, isActive: newActive }), toggleMetronome)
   }
 
 
@@ -30,35 +44,27 @@ export default class App extends Component {
     this.setState({ metronomeLedColor: "blue" }, () => setTimeout(() => {
       this.setState({ metronomeLedColor: "white" })
     }, 100))
-
-    this.flashDrumTile()
+    this.changeCurrentDrumTile()
   }
 
 
-  flashDrumTile = () => {
-
-    console.log("nextDrumTileId before setState : " + this.state.nextDrumTileId)
-    this.setState(prevState => {
-      return { nextDrumTileId: prevState.nextDrumTileId + 1 }
-    },
-      () => console.log("nextDrumTileId after setState : " + this.state.nextDrumTileId))
+  changeCurrentDrumTile = () => {
+    this.setState(prevState => ({
+      nextDrumTileId: prevState.nextDrumTileId > prevState.drumTileArray.length - 2 ? 0 : prevState.nextDrumTileId + 1
+    }))
+    this.createDrumTileArray(this.state.drumTileArray.length)
   }
 
 
-
-
-
-  //tu opcja bez prevState, która lepsza? Co za różnica? Podobno ta poniższa czasem nie zadziała. W jakich przypadkach?
-
-  // changeMetronomeState = (btnValue, newActive, toggleMetronome) => {
-  //   this.setState( { bpmNumber: this.state.bpmNumber + btnValue, isActive: newActive  }, toggleMetronome)
-  // }
+  addTile = () => {
+    this.setState(prevState => ({ drumTileArray: [...prevState.drumTileArray, this.renderTile(prevState.drumTileArray.length)] }))
+  }
+  removeTile = () => {
+    this.state.drumTileArray.length > 1 && this.setState(prevState => ({ drumTileArray: prevState.drumTileArray.slice(0, -1) }))
+  }
 
 
   render() {
-    //metody powinny być tu czy nad metodą render
-
-
     return (
       <div className="App" >
 
@@ -71,7 +77,9 @@ export default class App extends Component {
         />
 
         <DrumLoop
-          nextDrumTileId={this.state.nextDrumTileId}
+          drumTileArray={this.state.drumTileArray}
+          addTile={this.addTile}
+          removeTile={this.removeTile}
         />
       </div>
     )

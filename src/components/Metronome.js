@@ -5,7 +5,6 @@ export default class Metronome extends Component {
     toggleMetronome = () => {
         clearInterval(this.metronomeId)
         if (this.props.isActive) {
-            this.props.flashMetronomeLed()
             this.metronomeId = setInterval(this.props.flashMetronomeLed, (60 / (this.props.bpmNumber)) * 1000)
         }
     }
@@ -17,22 +16,30 @@ export default class Metronome extends Component {
             marginRight: 1
         }
 
+        const { isActive } = this.props
+        const { bpmNumber } = this.props
+        const { metronomeLedColor } = this.props
+
+        const changeMetronomeState = (val, newActive) => {
+            this.props.changeMetronomeState(val, newActive, this.toggleMetronome)
+        }
+
         return (
             <div className="Metronome">
 
-                <button onClick={() => this.props.changeMetronomeState(-10, this.props.isActive, this.toggleMetronome)} style={btnStyles}  >-10</button>
-                <button onClick={() => this.props.changeMetronomeState(-1, this.props.isActive, this.toggleMetronome)} style={btnStyles} >-</button>
-                <div style={{ display: "inline-block", width: 30 }} >{this.props.bpmNumber}</div>
-                <button onClick={() => this.props.changeMetronomeState(1, this.props.isActive, this.toggleMetronome)} style={btnStyles}  >+</button>
-                <button onClick={() => this.props.changeMetronomeState(10, this.props.isActive, this.toggleMetronome)} style={btnStyles}  >+10</button>
+                <button onClick={() => changeMetronomeState(-10, isActive)} style={btnStyles} >-10</button>
+                <button onClick={() => changeMetronomeState(-1, isActive)} style={btnStyles} >-</button>
+                <div style={{ display: "inline-block", width: 30 }} >{bpmNumber}</div>
+                <button onClick={() => changeMetronomeState(1, isActive)} style={btnStyles} >+</button>
+                <button onClick={() => changeMetronomeState(10, isActive)} style={btnStyles} >+10</button>
 
                 <button
-                    onClick={() => this.props.changeMetronomeState(0, !this.props.isActive, this.toggleMetronome)}
                     id="playStopButton"
-                    style={{ backgroundColor: this.props.isActive ? "red" : "white" }}
+                    onClick={() => changeMetronomeState(0, !isActive)}
+                    style={{ backgroundColor: isActive ? "red" : "white" }}
                 >PLAY/STOP</button>
-                
-                <div className="metronomeLed" id="metronomeLed" style={{ backgroundColor: this.props.metronomeLedColor }} ></div>
+                <div className="metronomeLed" id="metronomeLed" style={{ backgroundColor: metronomeLedColor }} ></div>
+
             </div>
         )
     }
