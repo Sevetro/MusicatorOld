@@ -2,85 +2,67 @@ import React, { Component } from 'react'
 import './App.css'
 import Metronome from './components/Metronome'
 import DrumLoop from './components/DrumLoop'
-import DrumTile from './components/DrumTile'
 
 export default class App extends Component {
   constructor() {
     super()
     this.state = {
-      bpmNumber: 200,
+      bpmNumber: 5060,
       isActive: false,
       metronomeLedColor: "white",
-      nextDrumTileId: -1,
-      drumTileArray: [],
-      initDrumTileCount: 10
+      activeTileId: -1,
+      tilesCount: 126
     }
   }
-
-
-  componentDidMount() {
-    this.createDrumTileArray(this.state.initDrumTileCount)
-  }
-
-
-  createDrumTileArray = (tileCount) => {
-    let newDrumTileArray = []
-    for (let i = 0; i < tileCount; i++) {
-      newDrumTileArray.push(this.renderTile(i))
-    }
-    this.setState({ drumTileArray: newDrumTileArray })
-  }
-
-
-  renderTile = (id) => (<DrumTile id={id} key={id} isActive={id === this.state.nextDrumTileId} />)
 
 
   changeMetronomeState = (btnValue, newActive, toggleMetronome) => {
     this.setState(prevState => ({ bpmNumber: prevState.bpmNumber + btnValue, isActive: newActive }), toggleMetronome)
   }
 
-
   flashMetronomeLed = () => {
     this.setState({ metronomeLedColor: "blue" }, () => setTimeout(() => {
       this.setState({ metronomeLedColor: "white" })
-    }, 20))
+    }, 50))
     this.changeCurrentDrumTile()
   }
 
 
   changeCurrentDrumTile = () => {
-    this.setState(prevState => ({
-      nextDrumTileId: prevState.nextDrumTileId > prevState.drumTileArray.length - 2 ? 0 : prevState.nextDrumTileId + 1
-    }))
-    this.createDrumTileArray(this.state.drumTileArray.length)
+    this.setState(prevState => ({ activeTileId: prevState.activeTileId > prevState.tilesCount - 2 ? 0 : prevState.activeTileId + 1 }))
   }
-
 
   addTile = () => {
-    this.setState(prevState => ({ drumTileArray: [...prevState.drumTileArray, this.renderTile(prevState.drumTileArray.length)] }))
+    this.setState(prevState => ({ tilesCount: prevState.tilesCount + 1 }))
   }
+
   removeTile = () => {
-    this.state.drumTileArray.length > 1 && this.setState(prevState => ({ drumTileArray: prevState.drumTileArray.slice(0, -1) }))
+    this.state.tilesCount > 1 && this.setState(prevState => ({ tilesCount: prevState.tilesCount - 1 }))
   }
 
 
   render() {
+    const { isActive, bpmNumber, metronomeLedColor, tilesCount, drumTileArray, activeTileId } = this.state
+
     return (
       <div className="App" >
 
         <Metronome
-          bpmNumber={this.state.bpmNumber}
-          isActive={this.state.isActive}
-          metronomeLedColor={this.state.metronomeLedColor}
+          bpmNumber={bpmNumber}
+          isActive={isActive}
+          metronomeLedColor={metronomeLedColor}
           changeMetronomeState={this.changeMetronomeState}
           flashMetronomeLed={this.flashMetronomeLed}
         />
 
         <DrumLoop
-          drumTileArray={this.state.drumTileArray}
+          drumTileArray={drumTileArray}
+          tilesCount={tilesCount}
+          activeTileId={activeTileId}
           addTile={this.addTile}
           removeTile={this.removeTile}
         />
+
       </div>
     )
   }
