@@ -2,8 +2,7 @@ import React from 'react'
 
 export default function DrumTile(props) {
 
-    const { isActive } = props
-    const { id } = props
+    const { isActive, id } = props
 
-    return <button style={{ backgroundColor: isActive ? "red" : "white" }}>{id}</button>
+    return <button style={{ padding:24, backgroundColor: isActive ? "red" : "white" }}>{id}</button>
 }

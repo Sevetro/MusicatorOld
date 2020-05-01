@@ -8,12 +8,12 @@ export default class App extends Component {
   constructor() {
     super()
     this.state = {
-      bpmNumber: 60,
+      bpmNumber: 200,
       isActive: false,
       metronomeLedColor: "white",
       nextDrumTileId: -1,
       drumTileArray: [],
-      initDrumTileCount: 4
+      initDrumTileCount: 10
     }
   }
 
@@ -43,7 +43,7 @@ export default class App extends Component {
   flashMetronomeLed = () => {
     this.setState({ metronomeLedColor: "blue" }, () => setTimeout(() => {
       this.setState({ metronomeLedColor: "white" })
-    }, 100))
+    }, 20))
     this.changeCurrentDrumTile()
   }
 
