@@ -19,7 +19,6 @@
     width: 190px;
     margin: auto;
     text-align: center;
-    align-items: center;
 }
 
 .metronomeLed {
@@ -29,6 +28,13 @@
     margin-bottom: -5px;
     margin-left: 2px;
     border-radius: 10px;
+}
 
+
+.DrumLoop{
     
+    width: 800px;
+    text-align: center;
+    margin: auto;
+
 }

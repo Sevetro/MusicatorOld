@@ -1,31 +1,16 @@
 import React, { Component } from 'react'
 
-export default class Metronome2 extends Component {
-    //powinno byc constructor(props)? czy bez props
-    constructor() {
-        super()
-        this.state = {
-            metronomeLedColor: "white",
-        }
-    }
+export default class Metronome extends Component {
 
-
+    //w sensie takie wyciągniecie 60 i 1000 do stałych?
+    secPerMin = 60
+    milSecPerSec = 1000
     toggleMetronome = () => {
         clearInterval(this.metronomeId)
         if (this.props.isActive) {
-            this.flashMetronomeLed()
-            this.metronomeId = setInterval(this.flashMetronomeLed, (60 / (this.props.bpmNumber)) * 1000)
-            
+            this.metronomeId = setInterval(this.props.flashMetronomeLed, (this.secPerMin / (this.props.bpmNumber)) * this.milSecPerSec)
         }
     }
-
-
-    flashMetronomeLed = () => {
-        this.setState({ metronomeLedColor: "blue" }, () => setTimeout(() => {
-            this.setState({ metronomeLedColor: "white" })
-        }, 100))
-    }
-
 
     render() {
         const btnStyles = {
@@ -34,20 +19,28 @@ export default class Metronome2 extends Component {
             marginRight: 1
         }
 
+        const { isActive, bpmNumber, metronomeLedColor } = this.props
+
+        const changeMetronomeState = (val, newActive) => {
+            this.props.changeMetronomeState(val, newActive, this.toggleMetronome)
+        }
+
         return (
             <div className="Metronome">
-                <button onClick={() => this.props.changeBpmNumber(-10, this.toggleMetronome)} style={btnStyles}  >-10</button>
-                <button onClick={() => this.props.changeBpmNumber(-1, this.toggleMetronome)} style={btnStyles} >-</button>
-                <div style={{ display: "inline-block", width: 30 }} >{this.props.bpmNumber}</div>
-                <button onClick={() => this.props.changeBpmNumber(1, this.toggleMetronome)} style={btnStyles}  >+</button>
-                <button onClick={() => this.props.changeBpmNumber(10, this.toggleMetronome)} style={btnStyles}  >+10</button>
+
+                <button onClick={() => changeMetronomeState(-10, isActive)} style={btnStyles} >-10</button>
+                <button onClick={() => changeMetronomeState(-1, isActive)} style={btnStyles} >-</button>
+                <div style={{ display: "inline-block", width: 30 }} >{bpmNumber}</div>
+                <button onClick={() => changeMetronomeState(1, isActive)} style={btnStyles} >+</button>
+                <button onClick={() => changeMetronomeState(10, isActive)} style={btnStyles} >+10</button>
 
                 <button
-                    onClick={() => this.props.changeActive(this.toggleMetronome)}
                     id="playStopButton"
-                    style={{ backgroundColor: this.props.isActive ? "red" : "white" }}
+                    onClick={() => changeMetronomeState(0, !isActive)}
+                    style={{ backgroundColor: isActive ? "red" : "white" }}
                 >PLAY/STOP</button>
-                <div className="metronomeLed" id="metronomeLed" style={{ backgroundColor: this.state.metronomeLedColor }} ></div>
+                <div className="metronomeLed" id="metronomeLed" style={{ backgroundColor: metronomeLedColor }} ></div>
+
             </div>
         )
     }

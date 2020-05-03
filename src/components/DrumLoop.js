@@ -1,12 +1,22 @@
 import React from 'react'
+import DrumTile from './DrumTile'
 
-function DrumLoop(){
+export default function DrumLoop({ removeTile, addTile, activeTileId, tilesCount }) {
 
+    const renderTile = (id) => (<DrumTile id={id} key={id} isActive={id === activeTileId} />)
 
-return (
+    let tilesArray = new Array(tilesCount).fill(tilesCount).map((tile, id) => renderTile(id))
 
-    <div>elkodrum</div>
-)
+    return (
+        <div className="DrumLoop" >
 
+            <div>
+                <button onClick={removeTile}>-</button>
+                <button onClick={addTile}>+</button>
+            </div>
+
+            <div>{tilesArray}</div>
+
+        </div>
+    )
 }
-export default DrumLoop;
