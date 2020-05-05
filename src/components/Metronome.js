@@ -1,47 +1,79 @@
-import React, { Component } from 'react'
+import React, { useContext } from 'react';
+import { DrumLoopContext } from './DrumLoopContext';
 
-export default class Metronome extends Component {
+let metronomeId;
 
-    //w sensie takie wyciągniecie 60 i 1000 do stałych?
-    secPerMin = 60
-    milSecPerSec = 1000
-    toggleMetronome = () => {
-        clearInterval(this.metronomeId)
-        if (this.props.isActive) {
-            this.metronomeId = setInterval(this.props.hitTheNote, (this.secPerMin / (this.props.bpmNumber)) * this.milSecPerSec)
-        }
-    }
+export default function Metronome() {
+  const {
+    bpmNumber,
+    setBpmNumber,
+    isActive,
+    setIsActive,
+    metronomeLedColor,
+    setMetronomeLedColor,
+    activeTileId,
+    setActiveTileId,
+    tileCount,
+  } = useContext(DrumLoopContext);
 
-    render() {
-        const btnStyles = {
-            display: "inline-block",
-            marginLeft: 1,
-            marginRight: 1
-        }
+  const toggleMetronome = () => {
+    clearInterval(metronomeId);
+    if (isActive)
+      metronomeId = setInterval(hitNextDrumTile, (60 / bpmNumber) * 1000);
+  };
 
-        const { isActive, bpmNumber, metronomeLedColor } = this.props
+  //za każdym razem jak zmieni sie state bedzie rerender i nie musze dawac onclickow dodatkowych na
+  //każdą zmiane bpm
+  toggleMetronome();
 
-        const changeMetronomeState = (val, newActive) => {
-            this.props.changeMetronomeState(val, newActive, this.toggleMetronome)
-        }
+  const hitNextDrumTile = () => {
+    setActiveTileId(activeTileId > tileCount - 2 ? 0 : activeTileId + 1);
+    flashMetronomeLed();
+  };
 
-        return (
-            <div className="Metronome">
+  const flashMetronomeLed = () => {
+    setMetronomeLedColor('blue');
+    setTimeout(() => setMetronomeLedColor('white'), 70);
+  };
 
-                <button onClick={() => changeMetronomeState(-10, isActive)} style={btnStyles} >-10</button>
-                <button onClick={() => changeMetronomeState(-1, isActive)} style={btnStyles} >-</button>
-                <div style={{ display: "inline-block", width: 30 }} >{bpmNumber}</div>
-                <button onClick={() => changeMetronomeState(1, isActive)} style={btnStyles} >+</button>
-                <button onClick={() => changeMetronomeState(10, isActive)} style={btnStyles} >+10</button>
+  const btnStyles = {
+    display: 'inline-block',
+    marginLeft: 1,
+    marginRight: 1,
+  };
 
-                <button
-                    id="playStopButton"
-                    onClick={() => changeMetronomeState(0, !isActive)}
-                    style={{ backgroundColor: isActive ? "red" : "white" }}
-                >PLAY/STOP</button>
-                <div className="metronomeLed" id="metronomeLed" style={{ backgroundColor: metronomeLedColor }} ></div>
+  return (
+    <div className="Metronome">
+      <button onClick={() => setBpmNumber(bpmNumber - 10)} style={btnStyles}>
+        -10
+      </button>
 
-            </div>
-        )
-    }
+      <button onClick={() => setBpmNumber(bpmNumber - 1)} style={btnStyles}>
+        -
+      </button>
+
+      <div style={{ display: 'inline-block', width: 30 }}>{bpmNumber}</div>
+
+      <button onClick={() => setBpmNumber(bpmNumber + 1)} style={btnStyles}>
+        +
+      </button>
+
+      <button onClick={() => setBpmNumber(bpmNumber + 10)} style={btnStyles}>
+        +10
+      </button>
+
+      <button
+        id="playStopButton"
+        onClick={() => setIsActive(!isActive)}
+        style={{ backgroundColor: isActive ? 'red' : 'white' }}
+      >
+        PLAY/STOP
+      </button>
+      <div
+        className="metronomeLed"
+        id="metronomeLed"
+        style={{ backgroundColor: metronomeLedColor }}
+      ></div>
+    </div>
+  );
 }
