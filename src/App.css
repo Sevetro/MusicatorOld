@@ -33,8 +33,10 @@
 
 .DrumLoop{
     
-    width: 800px;
+    width: 592px; 
+    /* for 12 tiles in row width: 888px ; */
     text-align: center;
     margin: auto;
+   
 
 }
