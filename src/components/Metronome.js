@@ -2,11 +2,13 @@ import React, { Component } from 'react'
 
 export default class Metronome extends Component {
 
+    //w sensie takie wyciągniecie 60 i 1000 do stałych?
+    secPerMin = 60
+    milSecPerSec = 1000
     toggleMetronome = () => {
-        clearInterval(this.metronomeId);
-        // Dobrą praktyką będzie wyciągnięcie 60 i 1000 do stałych ;)
+        clearInterval(this.metronomeId)
         if (this.props.isActive) {
-            this.metronomeId = setInterval(this.props.flashMetronomeLed, (60 / (this.props.bpmNumber)) * 1000)
+            this.metronomeId = setInterval(this.props.flashMetronomeLed, (this.secPerMin / (this.props.bpmNumber)) * this.milSecPerSec)
         }
     }
 
@@ -16,11 +18,7 @@ export default class Metronome extends Component {
             marginLeft: 1,
             marginRight: 1
         }
-        // Można na raz zdestrukturyzować kilka wlaściwości z obiektu.
-        // const { isActive } = this.props
-        // const { bpmNumber } = this.props
-        // const { metronomeLedColor } = this.props
-        // Robisz to tak:
+
         const { isActive, bpmNumber, metronomeLedColor } = this.props
 
         const changeMetronomeState = (val, newActive) => {
