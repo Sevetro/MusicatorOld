@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
-import DrumTile from './DrumTile';
-import { DrumLoopContext } from './DrumLoopContext';
+import DrumTile from './DrumTile/DrumTile';
+import { DrumLoopContext } from '../DrumLoopContext';
+import DrumLoopDiv from './DrumLoopDiv';
 
 export default function DrumLoop() {
   const { updateDrumLoopContext, activeTileId, tileCount } = useContext(
@@ -24,13 +25,13 @@ export default function DrumLoop() {
   };
 
   return (
-    <div className="DrumLoop">
+    <DrumLoopDiv>
       <div>
         <button onClick={removeTile}>-</button>
         <button onClick={addTile}>+</button>
       </div>
 
       <div>{drumTiles}</div>
-    </div>
+    </DrumLoopDiv>
   );
 }
