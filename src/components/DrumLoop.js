@@ -3,22 +3,24 @@ import DrumTile from './DrumTile';
 import { DrumLoopContext } from './DrumLoopContext';
 
 export default function DrumLoop() {
-  const { tileCount, activeTileId, setTileCount } = useContext(DrumLoopContext);
+  const { updateDrumLoopContext, activeTileId, tileCount } = useContext(
+    DrumLoopContext,
+  );
 
   const renderTile = (id) => (
     <DrumTile id={id} key={id} isActive={id === activeTileId} />
   );
 
-  let tilesArray = new Array(tileCount)
+  let drumTiles = new Array(tileCount)
     .fill(tileCount)
     .map((tile, id) => renderTile(id));
 
   const addTile = () => {
-    tileCount < 48 && setTileCount(tileCount + 1);
+    tileCount < 48 && updateDrumLoopContext({ tileCount: tileCount + 1 });
   };
 
   const removeTile = () => {
-    tileCount > 1 && setTileCount(tileCount - 1);
+    tileCount > 1 && updateDrumLoopContext({ tileCount: tileCount - 1 });
   };
 
   return (
@@ -28,7 +30,7 @@ export default function DrumLoop() {
         <button onClick={addTile}>+</button>
       </div>
 
-      <div>{tilesArray}</div>
+      <div>{drumTiles}</div>
     </div>
   );
 }

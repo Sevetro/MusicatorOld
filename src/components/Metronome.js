@@ -1,20 +1,31 @@
 import React, { useContext } from 'react';
 import { DrumLoopContext } from './DrumLoopContext';
+import ChangeBpmButton from './styled/ChageBpmButton';
+import DisplayBpmDiv from './styled/DisplayBpmDiv';
 
 let metronomeId;
 
 export default function Metronome() {
   const {
     bpmNumber,
-    setBpmNumber,
     isActive,
-    setIsActive,
     metronomeLedColor,
-    setMetronomeLedColor,
-    activeTileId,
-    setActiveTileId,
     tileCount,
+    activeTileId,
+    updateDrumLoopContext,
   } = useContext(DrumLoopContext);
+
+  const flashMetronomeLed = () => {
+    updateDrumLoopContext({ metronomeLedColor: 'blue' });
+    setTimeout(() => updateDrumLoopContext({ metronomeLedColor: 'white' }), 70);
+  };
+
+  const hitNextDrumTile = () => {
+    updateDrumLoopContext({
+      activeTileId: activeTileId > tileCount - 2 ? 0 : activeTileId + 1,
+    });
+    flashMetronomeLed();
+  };
 
   const toggleMetronome = () => {
     clearInterval(metronomeId);
@@ -22,49 +33,44 @@ export default function Metronome() {
       metronomeId = setInterval(hitNextDrumTile, (60 / bpmNumber) * 1000);
   };
 
-  //za każdym razem jak zmieni sie state bedzie rerender i nie musze dawac onclickow dodatkowych na
-  //każdą zmiane bpm
   toggleMetronome();
 
-  const hitNextDrumTile = () => {
-    setActiveTileId(activeTileId > tileCount - 2 ? 0 : activeTileId + 1);
-    flashMetronomeLed();
-  };
-
-  const flashMetronomeLed = () => {
-    setMetronomeLedColor('blue');
-    setTimeout(() => setMetronomeLedColor('white'), 70);
-  };
-
-  const btnStyles = {
-    display: 'inline-block',
-    marginLeft: 1,
-    marginRight: 1,
-  };
+  const handleBpmClick = (e) => {
+    updateDrumLoopContext({ bpmNumber: bpmNumber - 10 })
+  }
 
   return (
     <div className="Metronome">
-      <button onClick={() => setBpmNumber(bpmNumber - 10)} style={btnStyles}>
+      <ChangeBpmButton
+        onClick={() => handleBpmClick}
+        value={5}
+      >
         -10
-      </button>
+      </ChangeBpmButton>
 
-      <button onClick={() => setBpmNumber(bpmNumber - 1)} style={btnStyles}>
+      <ChangeBpmButton
+        onClick={() => updateDrumLoopContext({ bpmNumber: bpmNumber - 1 })}
+      >
         -
-      </button>
+      </ChangeBpmButton>
 
-      <div style={{ display: 'inline-block', width: 30 }}>{bpmNumber}</div>
+      <DisplayBpmDiv>{bpmNumber}</DisplayBpmDiv>
 
-      <button onClick={() => setBpmNumber(bpmNumber + 1)} style={btnStyles}>
+      <ChangeBpmButton
+        onClick={() => updateDrumLoopContext({ bpmNumber: bpmNumber + 1 })}
+      >
         +
-      </button>
+      </ChangeBpmButton>
 
-      <button onClick={() => setBpmNumber(bpmNumber + 10)} style={btnStyles}>
+      <ChangeBpmButton
+        onClick={() => updateDrumLoopContext({ bpmNumber: bpmNumber + 10 })}
+      >
         +10
-      </button>
+      </ChangeBpmButton>
 
       <button
         id="playStopButton"
-        onClick={() => setIsActive(!isActive)}
+        onClick={() => updateDrumLoopContext({ isActive: !isActive })}
         style={{ backgroundColor: isActive ? 'red' : 'white' }}
       >
         PLAY/STOP

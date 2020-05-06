@@ -1,30 +1,32 @@
-import React, { useState, createContext } from 'react';
+import React, { createContext, Component } from 'react';
 
 export const DrumLoopContext = createContext();
 
-export const DrumLoopProvider = (props) => {
-  const [bpmNumber, setBpmNumber] = useState(300);
-  const [isActive, setIsActive] = useState(false);
-  const [metronomeLedColor, setMetronomeLedColor] = useState('white');
-  const [activeTileId, setActiveTileId] = useState(6);
-  const [tileCount, setTileCount] = useState(47);
+export class DrumLoopProvider extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      bpmNumber: 300,
+      isActive: false,
+      metronomeLedColor: 'white',
+      activeTileId: 6,
+      tileCount: 47,
+    };
+  }
 
-  return (
-    <DrumLoopContext.Provider
-      value={{
-        bpmNumber,
-        setBpmNumber,
-        isActive,
-        setIsActive,
-        metronomeLedColor,
-        setMetronomeLedColor,
-        activeTileId,
-        setActiveTileId,
-        tileCount,
-        setTileCount,
-      }}
-    >
-      {props.children}
-    </DrumLoopContext.Provider>
-  );
-};
+  updateDrumLoopContext = (newValues) => {
+    this.setState({ ...newValues });
+  };
+  render() {
+    return (
+      <DrumLoopContext.Provider
+        value={{
+          ...this.state,
+          updateDrumLoopContext: this.updateDrumLoopContext,
+        }}
+      >
+        {this.props.children}
+      </DrumLoopContext.Provider>
+    );
+  }
+}
