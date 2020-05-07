@@ -1,40 +1,5 @@
 .App {
-    background-color: #282c34;
-    min-height: 100vh;
-    color: coral;
-}
-
-.LoginForm {
-    width: fit-content;
-    padding: 5px;
-    flex-direction: column;
-    display: flex;
-    align-items: center;
-    background-color: #484c54;
-}
-
-.Metronome {
-    padding: 4px;
-    background-color: #484c54;
-    width: 190px;
-    margin: auto;
-    text-align: center;
-}
-
-.metronomeLed {
-    width: 89px;
-    height: 20px;
-    display: inline-block;
-    margin-bottom: -5px;
-    margin-left: 2px;
-    border-radius: 10px;
-}
-
-
-.DrumLoop{
-    
-    width: 800px;
-    text-align: center;
-    margin: auto;
-
+  background-color: #282c34;
+  min-height: 100vh;
+  color: coral;
 }
