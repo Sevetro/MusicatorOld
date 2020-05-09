@@ -4,31 +4,33 @@ import { DrumLoopContext } from '../DrumLoopContext';
 import DrumLoopDiv from './DrumLoopDiv';
 
 export default function DrumLoop() {
-  const { updateDrumLoopContext, activeTileId, tileCount } = useContext(
+  const { updateDrumLoopContext, activeDrumTileId, drumTileCount } = useContext(
     DrumLoopContext,
   );
 
   const renderTile = (id) => (
-    <DrumTile id={id} key={id} isActive={id === activeTileId} />
+    <DrumTile id={id} key={id} isActive={id === activeDrumTileId} />
   );
 
-  let drumTiles = new Array(tileCount)
-    .fill(tileCount)
+  let drumTiles = new Array(drumTileCount)
+    .fill(drumTileCount)
     .map((tile, id) => renderTile(id));
 
-  const addTile = () => {
-    tileCount < 48 && updateDrumLoopContext({ tileCount: tileCount + 1 });
+  const addTile = (currentDrumTileCount) => {
+    currentDrumTileCount < 48 &&
+      updateDrumLoopContext({ drumTileCount: currentDrumTileCount + 1 });
   };
 
-  const removeTile = () => {
-    tileCount > 1 && updateDrumLoopContext({ tileCount: tileCount - 1 });
+  const removeTile = (currentDrumTileCount) => {
+    currentDrumTileCount > 1 &&
+      updateDrumLoopContext({ drumTileCount: currentDrumTileCount - 1 });
   };
 
   return (
     <DrumLoopDiv>
       <div>
-        <button onClick={removeTile}>-</button>
-        <button onClick={addTile}>+</button>
+        <button onClick={() => removeTile(drumTileCount)}>-</button>
+        <button onClick={() => addTile(drumTileCount)}>+</button>
       </div>
 
       <div>{drumTiles}</div>

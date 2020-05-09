@@ -14,8 +14,8 @@ export default function Metronome() {
     bpmNumber,
     isActive,
     metronomeLedColor,
-    tileCount,
-    activeTileId,
+    drumTileCount,
+    activeDrumTileId,
     updateDrumLoopContext,
   } = useContext(DrumLoopContext);
 
@@ -24,46 +24,56 @@ export default function Metronome() {
     setTimeout(() => updateDrumLoopContext({ metronomeLedColor: 'white' }), 70);
   };
 
-  const hitNextDrumTile = () => {
+  const hitNextDrumTile = (currentDrumTileId) => {
     updateDrumLoopContext({
-      activeTileId: activeTileId > tileCount - 2 ? 0 : activeTileId + 1,
+      activeDrumTileId:
+        currentDrumTileId > drumTileCount - 2 ? 0 : currentDrumTileId + 1,
     });
+
     flashMetronomeLed();
   };
 
-  const toggleMetronome = () => {
+  function toggleMetronome(contextIsActive) {
     clearInterval(metronomeId);
-    if (isActive)
-      metronomeId = setInterval(hitNextDrumTile, (60 / bpmNumber) * 1000);
-  };
-
-  function handleBpmClick(e) {
-    if (e.target.innerHTML === '-' || e.target.innerHTML === '+')
-      updateDrumLoopContext({
-        bpmNumber: bpmNumber + parseInt(`${e.target.innerHTML}1`),
-      });
-    else
-      updateDrumLoopContext({
-        bpmNumber: bpmNumber + parseInt(e.target.innerHTML),
-      });
+    if (contextIsActive) {
+      console.log('elko');
+      metronomeId = setInterval(
+        () => hitNextDrumTile(activeDrumTileId),
+        (60 / bpmNumber) * 1000
+      );
+    }
   }
 
-  toggleMetronome();
+  function handleClick(e) {
+    if (e.target.innerHTML === '-' || e.target.innerHTML === '+')
+      updateDrumLoopContext(
+        {
+          bpmNumber: bpmNumber + parseInt(`${e.target.innerHTML}1`),
+        },
+        toggleMetronome
+      );
+    else if (e.target.innerHTML === '-10' || e.target.innerHTML === '+10')
+      updateDrumLoopContext(
+        {
+          bpmNumber: bpmNumber + parseInt(e.target.innerHTML),
+        },
+        toggleMetronome
+      );
+    else updateDrumLoopContext({ isActive: !isActive }, toggleMetronome);
+  }
 
   return (
     <MetronomeDiv>
-      <ChangeBpmBtn onClick={handleBpmClick}>-10</ChangeBpmBtn>
-      <ChangeBpmBtn onClick={handleBpmClick}>-</ChangeBpmBtn>
+      <ChangeBpmBtn onClick={handleClick}>-10</ChangeBpmBtn>
+      <ChangeBpmBtn onClick={handleClick}>-</ChangeBpmBtn>
       <DisplayBpmDiv>{bpmNumber}</DisplayBpmDiv>
-      <ChangeBpmBtn onClick={handleBpmClick}>+</ChangeBpmBtn>
-      <ChangeBpmBtn onClick={handleBpmClick}>+10</ChangeBpmBtn>
+      <ChangeBpmBtn onClick={handleClick}>+</ChangeBpmBtn>
+      <ChangeBpmBtn onClick={handleClick}>+10</ChangeBpmBtn>
 
-      <ToggleMetronomeBtn
-        isActive={isActive}
-        onClick={() => updateDrumLoopContext({ isActive: !isActive })}
-      >
+      <ToggleMetronomeBtn isActive={isActive} onClick={handleClick}>
         PLAY/STOP
       </ToggleMetronomeBtn>
+
       <MetronomeLedDiv metronomeLedColor={metronomeLedColor}></MetronomeLedDiv>
     </MetronomeDiv>
   );

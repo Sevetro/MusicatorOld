@@ -6,16 +6,19 @@ export class DrumLoopProvider extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bpmNumber: 300,
+      bpmNumber: 100,
       isActive: false,
       metronomeLedColor: 'white',
-      activeTileId: 6,
-      tileCount: 47,
+      activeDrumTileId: 3,
+      drumTileCount: 8,
     };
   }
 
-  updateDrumLoopContext = (newValues) => {
-    this.setState({ ...newValues });
+  updateDrumLoopContext = async (newValues, callback) => {
+    const promise = await new Promise((resolve, reject) => {
+      resolve(this.setState({ ...newValues }));
+    });
+    if (callback) callback(this.state.isActive);
   };
   render() {
     return (
