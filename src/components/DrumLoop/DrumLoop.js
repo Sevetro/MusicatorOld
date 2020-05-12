@@ -5,7 +5,7 @@ import DrumLoopDiv from './DrumLoopDiv';
 
 export default function DrumLoop() {
   const { updateDrumLoopContext, activeDrumTileId, drumTileCount } = useContext(
-    DrumLoopContext,
+    DrumLoopContext
   );
 
   const renderTile = (id) => (
@@ -25,6 +25,8 @@ export default function DrumLoop() {
     currentDrumTileCount > 1 &&
       updateDrumLoopContext({ drumTileCount: currentDrumTileCount - 1 });
   };
+
+  //console.log('activeDrumTileId przed returnem DrumLoopa: '+activeDrumTileId)
 
   return (
     <DrumLoopDiv>
