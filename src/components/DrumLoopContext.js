@@ -6,23 +6,16 @@ export class DrumLoopProvider extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bpmNumber: 60,
+      bpmNumber: 500,
       isActive: false,
       activeDrumTileId: 3,
-      drumTileCount: 8,
+      drumTileCount: 48,
     };
   }
 
   updateDrumLoopContext = (newValues) => {
     this.setState({ ...newValues });
   };
-
-  // flashMetronomeLed = () => {
-  //   this.setState({ metronomeLedColor: 'blue' });
-  //   setTimeout(() => {
-  //     this.setState({ metronomeLedColor: 'white' });
-  //   }, 100);
-  // };
 
   render() {
     return (

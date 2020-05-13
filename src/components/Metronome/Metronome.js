@@ -52,7 +52,7 @@ export default function Metronome() {
         PLAY/STOP
       </ToggleMetronomeBtn>
 
-      <MetronomeLed activeDrumTileId={activeDrumTileId}></MetronomeLed>
+      <MetronomeLed />
     </MetronomeDiv>
   );
 }

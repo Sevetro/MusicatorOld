@@ -5,6 +5,7 @@ import DrumSample from './DrumSample';
 
 export default function DrumSelector() {
   const sampleCount = 24;
+  const myOctave = 3;
   const notesArray = [
     'C',
     'C#',
@@ -19,8 +20,6 @@ export default function DrumSelector() {
     'A#',
     'B',
   ];
-
-  const myOctave = 3;
 
   const renderSample = (id) => (
     <DrumSample

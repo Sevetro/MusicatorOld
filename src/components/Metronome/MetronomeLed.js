@@ -1,4 +1,4 @@
-import React, { Component, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import MetronomeLedDiv from './MetronomeLedDiv';
 import { DrumLoopContext } from '../DrumLoopContext';
 

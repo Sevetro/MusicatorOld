@@ -1,18 +1,47 @@
 import React, { useContext } from 'react';
-import DrumTile from './DrumTile/DrumTile';
+import DrumTile from './DrumTile';
 import { DrumLoopContext } from '../DrumLoopContext';
 import DrumLoopDiv from './DrumLoopDiv';
+import Tone from 'tone';
+
+const synth = new Tone.Synth().toMaster();
 
 export default function DrumLoop() {
   const { updateDrumLoopContext, activeDrumTileId, drumTileCount } = useContext(
     DrumLoopContext
   );
 
+  const myOctave = 3;
+  const notesArray = [
+    'C',
+    'C#',
+    'D',
+    'D#',
+    'E',
+    'F',
+    'F#',
+    'G',
+    'G#',
+    'A',
+    'A#',
+    'B',
+  ];
+
   const renderTile = (id) => (
-    <DrumTile id={id} key={id} isActive={id === activeDrumTileId} />
+    <DrumTile
+      id={id}
+      key={id}
+      isActive={id === activeDrumTileId}
+      note={`${notesArray[id % 12]}${((id / 12) | 0) + myOctave}`}
+      playNote={playNote}
+    />
   );
 
-  let drumTiles = new Array(drumTileCount)
+  const playNote = (note) => {
+    synth.triggerAttackRelease(note, '8n');
+  };
+
+  const drumTiles = new Array(drumTileCount)
     .fill(drumTileCount)
     .map((tile, id) => renderTile(id));
 
@@ -26,8 +55,7 @@ export default function DrumLoop() {
       updateDrumLoopContext({ drumTileCount: currentDrumTileCount - 1 });
   };
 
-  //console.log('activeDrumTileId przed returnem DrumLoopa: '+activeDrumTileId)
-
+  console.log(1);
   return (
     <DrumLoopDiv>
       <div>
