@@ -1,13 +1,24 @@
 import React from 'react';
-import DrumSampleBtn from './DrumSampleBtn';
-import Tone from 'tone';
+import DrumSampleSpan from './DrumSampleSpan';
+import { useDrag } from 'react-dnd';
+import { ItemTypes } from '../../utils/items';
 
-export default function DrumSample({ id, note }) {
-  const synth = new Tone.Synth().toMaster();
+export default function DrumSample({ id, note, playNote }) {
+  const [{ isDragging }, dragRef] = useDrag({
+    item: {
+      type: ItemTypes.DRUMSAMPLE,
+      note: note,
+    },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
 
-  const playNote = () => {
-    synth.triggerAttackRelease(note, '8n');
-  };
-
-  return <DrumSampleBtn onClick={playNote}>{id}</DrumSampleBtn>;
+  return (
+    <DrumSampleSpan
+      ref={dragRef}
+      onClick={() => playNote(note)}
+      children={note}
+    />
+  );
 }

@@ -6,10 +6,10 @@ export class DrumLoopProvider extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bpmNumber: 500,
+      bpmNumber: 160,
       isActive: false,
       activeDrumTileId: 3,
-      drumTileCount: 48,
+      drumTileCount: 8,
     };
   }
 

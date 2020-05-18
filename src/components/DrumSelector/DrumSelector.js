@@ -1,7 +1,9 @@
 import React from 'react';
-
 import DrumSelectorDiv from './DrumSelectorDiv';
 import DrumSample from './DrumSample';
+import Tone from 'tone';
+
+const synth = new Tone.Synth().toMaster();
 
 export default function DrumSelector() {
   const sampleCount = 24;
@@ -21,11 +23,16 @@ export default function DrumSelector() {
     'B',
   ];
 
+  const playNote = (note) => {
+    synth.triggerAttackRelease(note, '8n');
+  };
+
   const renderSample = (id) => (
     <DrumSample
       id={id}
       key={id}
       note={`${notesArray[id % 12]}${((id / 12) | 0) + myOctave}`}
+      playNote={playNote}
     />
   );
 

@@ -32,7 +32,7 @@ export default function DrumLoop() {
       id={id}
       key={id}
       isActive={id === activeDrumTileId}
-      note={`${notesArray[id % 12]}${((id / 12) | 0) + myOctave}`}
+      initNote={`${notesArray[id % 12]}${((id / 12) | 0) + myOctave}`}
       playNote={playNote}
     />
   );
@@ -55,7 +55,6 @@ export default function DrumLoop() {
       updateDrumLoopContext({ drumTileCount: currentDrumTileCount - 1 });
   };
 
-  console.log(1);
   return (
     <DrumLoopDiv>
       <div>
