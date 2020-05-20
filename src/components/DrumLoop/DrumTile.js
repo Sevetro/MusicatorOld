@@ -14,9 +14,9 @@ export default function DrumTile({ isActive, id, initNote, playNote }) {
     accept: [ItemTypes.DRUMSAMPLE, ItemTypes.DRUMTILE],
 
     drop: (item, monitor) => {
-      if (item.type === ItemTypes.DRUMTILE && item.note && item.id !== id) {
+      if (item.type === ItemTypes.DRUMTILE && item.id !== id) {
         setNote(item.note);
-        item.setNote(null);
+        item.setNote(note);
       }
       if (item.type === ItemTypes.DRUMSAMPLE) setNote(item.note);
     },

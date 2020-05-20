@@ -8,8 +8,8 @@ export class DrumLoopProvider extends Component {
     this.state = {
       bpmNumber: 160,
       isActive: false,
-      activeDrumTileId: 3,
-      drumTileCount: 8,
+      activeDrumTileId: 0,
+      drumTileCount: 16,
     };
   }
 
