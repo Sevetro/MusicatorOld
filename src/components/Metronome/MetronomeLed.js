@@ -3,18 +3,18 @@ import MetronomeLedDiv from './MetronomeLedDiv';
 import { DrumLoopContext } from '../DrumLoopContext';
 
 export default function MetronomeLed() {
-  const { activeDrumTileId } = useContext(DrumLoopContext);
+  const { metronomeTicks } = useContext(DrumLoopContext);
   const [metronomeLedColor, setMetronomeLedColor] = useState('white');
-  const [hookDrumTileId, setHookDrumTileId] = useState(activeDrumTileId);
+  const [hookDrumTileId, setHookDrumTileId] = useState(metronomeTicks);
   const flashTime = 100;
 
   const flashMetronomeLed = () => {
     setMetronomeLedColor('blue');
-    setHookDrumTileId(activeDrumTileId);
+    setHookDrumTileId(metronomeTicks);
     setTimeout(() => setMetronomeLedColor('white'), flashTime);
   };
 
-  if (activeDrumTileId !== hookDrumTileId) {
+  if (metronomeTicks !== hookDrumTileId) {
     flashMetronomeLed();
   }
 

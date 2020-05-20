@@ -1,4 +1,5 @@
 import React, { createContext, Component } from 'react';
+import loopsData from '../data/loopsData.json';
 
 export const DrumLoopContext = createContext();
 
@@ -8,8 +9,8 @@ export class DrumLoopProvider extends Component {
     this.state = {
       bpmNumber: 160,
       isActive: false,
-      activeDrumTileId: 0,
-      drumTileCount: 16,
+      metronomeTicks: 0,
+      loops: loopsData,
     };
   }
 

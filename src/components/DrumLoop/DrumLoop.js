@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import DrumTile from './DrumTile';
 import { DrumLoopContext } from '../DrumLoopContext';
 import DrumLoopDiv from './DrumLoopDiv';
@@ -7,32 +7,17 @@ import Tone from 'tone';
 const synth = new Tone.Synth().toMaster();
 
 export default function DrumLoop() {
-  const { updateDrumLoopContext, activeDrumTileId, drumTileCount } = useContext(
+  const { updateDrumLoopContext, metronomeTicks, loops } = useContext(
     DrumLoopContext
   );
-
-  const myOctave = 3;
-  const notesArray = [
-    'C',
-    'C#',
-    'D',
-    'D#',
-    'E',
-    'F',
-    'F#',
-    'G',
-    'G#',
-    'A',
-    'A#',
-    'B',
-  ];
+  const [isInit, setIsInit] = useState(true);
 
   const renderTile = (id) => (
     <DrumTile
       id={id}
       key={id}
-      isActive={id === activeDrumTileId}
-      initNote={`${notesArray[id % 12]}${((id / 12) | 0) + myOctave}`}
+      isActive={id === Math.floor(metronomeTicks % loops[0].notes.length)}
+      initNote={isInit && loops[0].notes[id]}
       playNote={playNote}
     />
   );
@@ -41,25 +26,40 @@ export default function DrumLoop() {
     if (note) synth.triggerAttackRelease(note, '8n');
   };
 
-  const drumTiles = new Array(drumTileCount)
-    .fill(drumTileCount)
+  const drumTiles = new Array(loops[0].notes.length)
+    .fill(loops[0].notes.length)
     .map((tile, id) => renderTile(id));
 
-  const addTile = (currentDrumTileCount) => {
-    currentDrumTileCount < 48 &&
-      updateDrumLoopContext({ drumTileCount: currentDrumTileCount + 1 });
+  useEffect(() => {
+    setIsInit(false);
+  }, [isInit]);
+  //TU POWINNO BYĆ [IsInit] CZY MOGE ZOSTAWIC PUSTE?
+
+  const addTile = (oldArray) => {
+    if (oldArray.length < 48) {
+      const newLoops = loops;
+      newLoops[0].notes.push('');
+      updateDrumLoopContext({ loops: newLoops });
+    }
   };
 
-  const removeTile = (currentDrumTileCount) => {
-    currentDrumTileCount > 1 &&
-      updateDrumLoopContext({ drumTileCount: currentDrumTileCount - 1 });
+  const removeTile = (oldArray) => {
+    if (oldArray.length > 1) {
+      const newLoops = loops;
+      newLoops[0].notes.pop();
+      updateDrumLoopContext({ loops: newLoops });
+    }
   };
+
+  // const saveLoop = () =>{
+  //   notes=new Array(drumTileCount)
+  // }
 
   return (
     <DrumLoopDiv>
       <div>
-        <button onClick={() => removeTile(drumTileCount)}>-</button>
-        <button onClick={() => addTile(drumTileCount)}>+</button>
+        <button onClick={() => removeTile(loops[0].notes)}>-</button>
+        <button onClick={() => addTile(loops[0].notes)}>+</button>
       </div>
 
       <div>{drumTiles}</div>

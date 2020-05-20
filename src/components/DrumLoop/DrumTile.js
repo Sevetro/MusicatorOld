@@ -5,14 +5,13 @@ import { useDrop, useDrag } from 'react-dnd';
 import { ItemTypes } from '../../utils/items';
 
 export default function DrumTile({ isActive, id, initNote, playNote }) {
-  const { activeDrumTileId } = useContext(DrumLoopContext);
-  const [hookDrumTileId, setHookDrumTileId] = useState(activeDrumTileId);
-  const [note, setNote] = useState(null);
+  const { metronomeTicks } = useContext(DrumLoopContext);
+  const [hookDrumTileId, setHookDrumTileId] = useState(metronomeTicks);
+  const [note, setNote] = useState(initNote);
   const ref = useRef(null);
 
   const [{ isOver }, dropRef] = useDrop({
     accept: [ItemTypes.DRUMSAMPLE, ItemTypes.DRUMTILE],
-
     drop: (item, monitor) => {
       if (item.type === ItemTypes.DRUMTILE && item.id !== id) {
         setNote(item.note);
@@ -20,7 +19,6 @@ export default function DrumTile({ isActive, id, initNote, playNote }) {
       }
       if (item.type === ItemTypes.DRUMSAMPLE) setNote(item.note);
     },
-
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
@@ -33,14 +31,13 @@ export default function DrumTile({ isActive, id, initNote, playNote }) {
       setNote: setNote,
       id: id,
     },
-
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   });
 
-  if (activeDrumTileId !== hookDrumTileId && isActive) playNote(note);
-  if (activeDrumTileId !== hookDrumTileId) setHookDrumTileId(activeDrumTileId);
+  if (metronomeTicks !== hookDrumTileId && isActive) playNote(note);
+  if (metronomeTicks !== hookDrumTileId) setHookDrumTileId(metronomeTicks);
 
   dropRef(ref);
   if (note) dragRef(ref);

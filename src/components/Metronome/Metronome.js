@@ -6,28 +6,26 @@ import ToggleMetronomeBtn from './ToggleMetronomeBtn';
 import MetronomeDiv from './MetronomeDiv';
 import MetronomeLed from './MetronomeLed';
 
-let metronomeId;
+let timeoutId;
 
 export default function Metronome() {
   const {
     bpmNumber,
     isActive,
-    drumTileCount,
-    activeDrumTileId,
+    metronomeTicks,
     updateDrumLoopContext,
   } = useContext(DrumLoopContext);
 
-  function hitNextDrumTile() {
-    updateDrumLoopContext({
-      activeDrumTileId:
-        activeDrumTileId > drumTileCount - 2 ? 0 : activeDrumTileId + 1,
-    });
-  }
-
   const toggleMetronome = () => {
-    clearTimeout(metronomeId);
+    clearTimeout(timeoutId);
     if (isActive) {
-      metronomeId = setTimeout(hitNextDrumTile, (60 / bpmNumber) * 1000);
+      timeoutId = setTimeout(
+        () =>
+          updateDrumLoopContext({
+            metronomeTicks: metronomeTicks + 1,
+          }),
+        (60 / bpmNumber) * 1000
+      );
     }
   };
 
