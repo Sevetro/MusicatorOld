@@ -2,12 +2,25 @@ import React from 'react';
 import DrumSelectorDiv from './DrumSelectorDiv';
 import DrumSample from './DrumSample';
 import Tone from 'tone';
+import { useDrop } from 'react-dnd';
+import { ItemTypes } from '../../utils/items';
 
 const synth = new Tone.Synth().toMaster();
 
 export default function DrumSelector() {
+  const [{ isOver }, dropRef] = useDrop({
+    accept: [ItemTypes.DRUMTILE],
+
+    drop: (item, monitor) => {
+      item.setNote();
+    },
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+    }),
+  });
+
   const sampleCount = 24;
-  const myOctave = 3;
+  const initOctave = 3;
   const notesArray = [
     'C',
     'C#',
@@ -31,7 +44,7 @@ export default function DrumSelector() {
     <DrumSample
       id={id}
       key={id}
-      note={`${notesArray[id % 12]}${((id / 12) | 0) + myOctave}`}
+      note={`${notesArray[id % 12]}${((id / 12) | 0) + initOctave}`}
       playNote={playNote}
     />
   );
@@ -40,5 +53,7 @@ export default function DrumSelector() {
     .fill(sampleCount)
     .map((tile, id) => renderSample(id));
 
-  return <DrumSelectorDiv>{drumSamples}</DrumSelectorDiv>;
+  return (
+    <DrumSelectorDiv ref={dropRef} isOver={isOver} children={drumSamples} />
+  );
 }

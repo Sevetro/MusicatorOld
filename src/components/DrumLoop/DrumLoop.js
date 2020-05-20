@@ -38,7 +38,7 @@ export default function DrumLoop() {
   );
 
   const playNote = (note) => {
-    synth.triggerAttackRelease(note, '8n');
+    if (note) synth.triggerAttackRelease(note, '8n');
   };
 
   const drumTiles = new Array(drumTileCount)

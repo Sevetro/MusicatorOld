@@ -1,33 +1,55 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import DrumTileSpan from './DrumTileSpan';
 import { DrumLoopContext } from '../DrumLoopContext';
-import { useDrop } from 'react-dnd';
+import { useDrop, useDrag } from 'react-dnd';
 import { ItemTypes } from '../../utils/items';
-// import { useDrag } from 'react-dnd';
 
 export default function DrumTile({ isActive, id, initNote, playNote }) {
   const { activeDrumTileId } = useContext(DrumLoopContext);
   const [hookDrumTileId, setHookDrumTileId] = useState(activeDrumTileId);
-  const [note, setNote] = useState();
+  const [note, setNote] = useState(null);
+  const ref = useRef(null);
 
   const [{ isOver }, dropRef] = useDrop({
-    accept: ItemTypes.DRUMSAMPLE,
+    accept: [ItemTypes.DRUMSAMPLE, ItemTypes.DRUMTILE],
+
     drop: (item, monitor) => {
-      setNote(item.note);
+      if (item.type === ItemTypes.DRUMTILE && item.note && item.id !== id) {
+        setNote(item.note);
+        item.setNote(null);
+      }
+      if (item.type === ItemTypes.DRUMSAMPLE) setNote(item.note);
     },
+
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
   });
 
-  if (activeDrumTileId !== hookDrumTileId && isActive && note) playNote(note);
+  const [, dragRef] = useDrag({
+    item: {
+      type: ItemTypes.DRUMTILE,
+      note: note,
+      setNote: setNote,
+      id: id,
+    },
 
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
+
+  if (activeDrumTileId !== hookDrumTileId && isActive) playNote(note);
   if (activeDrumTileId !== hookDrumTileId) setHookDrumTileId(activeDrumTileId);
+
+  dropRef(ref);
+  if (note) dragRef(ref);
 
   return (
     <DrumTileSpan
+      draggable={!!note}
       isOver={isOver}
-      ref={dropRef}
+      ref={ref}
       children={note ? note : id}
       isActive={isActive}
       isAssigned={!!note}

@@ -16,4 +16,5 @@ export default styled.span`
   &:hover {
     background-color: wheat;
   }
+  user-select: none;
 `;

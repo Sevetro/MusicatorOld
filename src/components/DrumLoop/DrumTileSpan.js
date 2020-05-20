@@ -13,4 +13,5 @@ export default styled.span`
   background: ${(props) =>
     props.isActive ? 'red' : props.isAssigned ? 'yellow' : 'white'};
   opacity: ${(props) => (props.isOver ? '0.5' : '1')};
+  user-select: none;
 `;
