@@ -7,24 +7,29 @@ import Tone from 'tone';
 const synth = new Tone.Synth().toMaster();
 
 export default function DrumLoop() {
-  const { updateDrumLoopContext, metronomeTicks, loops } = useContext(
+  const { updateDrumLoopContext, loops, metronomeTicks } = useContext(
     DrumLoopContext
   );
   const [isInit, setIsInit] = useState(true);
+  const [activeTileId, setActiveTileId] = useState(metronomeTicks);
+
+  useEffect(() => {
+    setActiveTileId(activeTileId + 1);
+  }, [metronomeTicks]);
+
+  const playNote = (note) => {
+    if (note) synth.triggerAttackRelease(note, '8n');
+  };
 
   const renderTile = (id) => (
     <DrumTile
       id={id}
       key={id}
-      isActive={id === Math.floor(metronomeTicks % loops[0].notes.length)}
+      isActive={id === activeTileId}
       initNote={isInit && loops[0].notes[id]}
       playNote={playNote}
     />
   );
-
-  const playNote = (note) => {
-    if (note) synth.triggerAttackRelease(note, '8n');
-  };
 
   const drumTiles = new Array(loops[0].notes.length)
     .fill(loops[0].notes.length)
@@ -32,8 +37,7 @@ export default function DrumLoop() {
 
   useEffect(() => {
     setIsInit(false);
-  }, [isInit]);
-  //TU POWINNO BYĆ [IsInit] CZY MOGE ZOSTAWIC PUSTE?
+  }, []);
 
   const addTile = (oldArray) => {
     if (oldArray.length < 48) {
