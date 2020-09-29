@@ -1,4 +1,5 @@
 import React, { createContext, Component } from 'react';
+import loopsData from '../data/loopsData.json';
 
 export const DrumLoopContext = createContext();
 
@@ -6,17 +7,17 @@ export class DrumLoopProvider extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bpmNumber: 300,
+      bpmNumber: 160,
       isActive: false,
-      metronomeLedColor: 'white',
-      activeTileId: 6,
-      tileCount: 47,
+      metronomeTicks: 0,
+      loops: loopsData,
     };
   }
 
   updateDrumLoopContext = (newValues) => {
     this.setState({ ...newValues });
   };
+
   render() {
     return (
       <DrumLoopContext.Provider
